@@ -1,5 +1,5 @@
 from collections import Counter
-from scapy.all import sniff
+from scapy.all import *
 
 ## Create a Packet Counter
 packet_counts = Counter()
@@ -11,18 +11,17 @@ captured_packets = []
 def custom_action(packet):
     # Create tuple of Src/Dst in sorted order
     #print(type(packet[3]))
-    if str(type(packet.lastlayer())) == "<class 'scapy.packet.Raw'>":
-    	return
-    print(type(packet.lastlayer()))
-    key = tuple(sorted([packet[0][1].src, packet[0][1].dst]))
-    packet_counts.update([key])
+    #print(packet.show())
+    #key = tuple(sorted([packet[0][1].src, packet[0][1].dst]))
+    #packet_counts.update([key])
 
 
     captured_packets.append(packet)
     #return "Packet #{}: {} ==> {}".format(sum(packet_counts.values()), packet[0][1].src, packet[0][1].dst)
 
 ## Setup sniff, filtering for IP traffic
-sniff(prn=custom_action)
+pkts = sniff(prn=custom_action)
+wrpcap('foo.pcap', pkts)
 
 ## Print out packet count per A <--> Z address pair
 print("\n".join(f"{f'{key[0]} <--> {key[1]}'}: {count}" for key, count in packet_counts.items()))
