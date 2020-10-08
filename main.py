@@ -18,10 +18,11 @@ def handle_cleartext(pkt):
 	
 	# Check if we don't want this kind of packet
 	if lyr.name in black_list:
-		return
+		return False
 		
-	print(last_layer.name)
+	print(lyr.name)
 	captured_packets.append(pkt)
+	return True
 	
 
 ## Define our Custom Action function
@@ -33,10 +34,8 @@ def custom_action(packet):
     #packet_counts.update([key])
     
     # Handle if packet is cleartext
-    handle_cleartext(packet)
-
-
-    return "Packet #{}: {} ==> {}".format(sum(packet_counts.values()), packet[0][1].src, packet[0][1].dst)
+    if handle_cleartext(packet):
+		return "Packet #{}: {} ==> {}".format(sum(packet_counts.values()), packet[0][1].src, packet[0][1].dst)
 
 ## Setup sniff, filtering for IP traffic
 pkts = sniff(prn=custom_action)
