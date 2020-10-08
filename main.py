@@ -5,6 +5,7 @@ from scapy.all import *
 packet_counts = Counter()
 
 #Variable that stores the captured packets
+
 captured_packets = []
 
 ## Define our Custom Action function
