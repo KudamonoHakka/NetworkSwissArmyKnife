@@ -34,7 +34,7 @@ def custom_action(packet):
     # Handle if packet is cleartext
     if handle_cleartext(packet):
 		try:
-			return "Packet #{}: {} ==> {}".format(sum(packet_counts.values()), packet[0][1].src, packet[0][1].dst)
+			return "Packet #{}: {} ==> {} Type: {}".format(sum(packet_counts.values()), packet[0][1].src, packet[0][1].dst, packet.lastlayer().name)
 		except:
 			return ""
 
