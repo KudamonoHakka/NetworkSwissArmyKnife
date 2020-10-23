@@ -84,6 +84,9 @@ def printPacketSniffOptions():
 run_program = True
 
 def handleMenu():
+	global packet_sniff_filename
+	global packet_sniff_count
+	global packet_sniff_filter
 	# Print logo of project
 	printHeader()
 	
@@ -113,6 +116,9 @@ def handleMenu():
 				# Get user input
 				inp_cmd = raw_input(": ")
 				
+				# Split the user input
+				spaced_cmd = inp_cmd.split(" ")
+				
 				# List options
 				if inp_cmd == "op":
 					printPacketSniffOptions()
@@ -121,6 +127,24 @@ def handleMenu():
 				elif inp_cmd == "b":
 					menu_sniff_run = False
 					continue
+				
+				elif spaced_cmd[0] == "set":
+					if not len(spaced_cmd) == 3:
+						print("Too many or too few parameters")
+						continue
+					
+					if spaced_cmd[1] == "file_name":
+						packet_sniff_filename = spaced_cmd[2]
+						print("Setting file_name to: {}".format(spaced_cmd[2]))
+						continue
+						
+					elif spaced_cmd[1] == "packet_cap":
+						if (spaced_cmd[2].lower()).islower() == True:
+							print("Please input real numbers")
+							continue
+						packet_sniff_count = int(spaced_cmd[2])
+						print("Setting packet_cap to: {}".format(int(spaced_cmd[2])))
+						
 				
 				# Execute tool with parameters
 				elif inp_cmd == "r":
