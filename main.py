@@ -1,6 +1,7 @@
 from collections import Counter
 import sys
 from scapy.all import *
+import sniff
 
 ## Create a Packet Counter
 packet_counts = Counter()
@@ -129,18 +130,29 @@ def handleMenu():
 					continue
 				
 				elif spaced_cmd[0] == "set":
+					# Check if the user didn't specify enough parameters
 					if not len(spaced_cmd) == 3:
+						
 						print("Too many or too few parameters")
+						
 						continue
 					
+					# Changing file_name parameter
 					if spaced_cmd[1] == "file_name":
-						packet_sniff_filename = spaced_cmd[2]
-						print("Setting file_name to: {}".format(spaced_cmd[2]))
-						continue
 						
+						packet_sniff_filename = spaced_cmd[2]
+						
+						print("Setting file_name to: {}".format(spaced_cmd[2]))
+						
+						continue
+					
+					# Changing packet_cap parameter
 					elif spaced_cmd[1] == "packet_cap":
+						# Check if user didn't input numbers
 						if (spaced_cmd[2].lower()).islower() == True:
+							
 							print("Please input real numbers")
+							
 							continue
 						packet_sniff_count = int(spaced_cmd[2])
 						print("Setting packet_cap to: {}".format(int(spaced_cmd[2])))
