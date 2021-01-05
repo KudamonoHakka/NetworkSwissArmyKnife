@@ -225,8 +225,4 @@ def handleMenu():
 		else:
 			print("Unknown command")
 		
-
 handleMenu()
-## Setup sniff, filtering for IP traffic
-pkts = sniff(prn=custom_action)
-wrpcap('foo.pcap', captured_packets)
