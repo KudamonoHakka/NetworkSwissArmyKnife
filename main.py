@@ -123,6 +123,15 @@ def handleMenu():
 				# List options
 				if inp_cmd == "op":
 					printPacketSniffOptions()
+					
+				if inp_cmd == "r":
+					if packet_sniff_filter == "default":
+						if packet_sniff_count == 0:
+							pkts = sniff(filter="not arp and not icmp")
+							wrpcap(packet_sniff_filename, captured_packets)
+						else:
+							pkts = sniff(filter="not arp and not icmp", count=packet_sniff_count)
+							wrpcap(packet_sniff_filename, captured_packets)
 				
 				# Exit this tool
 				elif inp_cmd == "b":
@@ -155,6 +164,11 @@ def handleMenu():
 							
 							continue
 						packet_sniff_count = int(spaced_cmd[2])
+						
+						# Be sure that we're working with only positive numbers
+						if packet_sniff_count < 0:
+							packet_sniff_count = -packet_sniff_count
+						
 						print("Setting packet_cap to: {}".format(int(spaced_cmd[2])))
 						
 				
