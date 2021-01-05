@@ -1,7 +1,8 @@
 from collections import Counter
 import sys
+import os
 from scapy.all import *
-import sniff
+#import sniff
 
 ## Create a Packet Counter
 packet_counts = Counter()
@@ -63,6 +64,7 @@ def printOptions():
 packet_sniff_filename = "foo"
 packet_sniff_count = 0
 packet_sniff_filter = "default"
+packet_sniff_interface = "eth0"
 
 def printPacketSniffOptions():
 	# Menu for packet sniffer
@@ -73,6 +75,7 @@ def printPacketSniffOptions():
 	print("file_name: {}".format(packet_sniff_filename))
 	print("packet_cap (0 for infinite): {}".format(packet_sniff_count))
 	print("filter: {}".format(packet_sniff_filter))
+	print("interface: {}".format(packet_sniff_interface))
 	print("")
 	print("___Commands___")
 	print("set [variable] [value]) Change parameter value")
@@ -88,6 +91,7 @@ def handleMenu():
 	global packet_sniff_filename
 	global packet_sniff_count
 	global packet_sniff_filter
+	global packet_sniff_interface
 	# Print logo of project
 	printHeader()
 	
@@ -122,27 +126,66 @@ def handleMenu():
 				
 				# List options
 				if inp_cmd == "op":
+					# Clear menu
+					os.system('cls' if os.name == 'nt' else 'clear')
 					printPacketSniffOptions()
+					continue
 					
 				if inp_cmd == "r":
 					if packet_sniff_filter == "default":
+						try:
+							if packet_sniff_count == 0:
+								pkts = sniff(filter="not arp and not icmp", iface=packet_sniff_interface)
+								wrpcap(packet_sniff_filename+'.cap', pkts)
+							else:
+								pkts = sniff(filter="not arp and not icmp", count=packet_sniff_count, iface=packet_sniff_interface)
+								wrpcap(packet_sniff_filename+'.cap', pkts)
+						except:
+							print("Hmm... Something went wrong. Make sure none of the settings are invalid, such as the interface or filter")
+					else:
 						if packet_sniff_count == 0:
-							pkts = sniff(filter="not arp and not icmp")
-							wrpcap(packet_sniff_filename, captured_packets)
+							pkts = sniff(filter=packet_sniff_filter, iface=packet_sniff_interface)
+							wrpcap(packet_sniff_filename+'.cap', pkts)
 						else:
-							pkts = sniff(filter="not arp and not icmp", count=packet_sniff_count)
-							wrpcap(packet_sniff_filename, captured_packets)
+							pkts = sniff(filter=packet_sniff_filter, count=packet_sniff_count, iface=packet_sniff_interface)
+							wrpcap(packet_sniff_filename+'.cap', pkts)
 				
 				# Exit this tool
 				elif inp_cmd == "b":
 					menu_sniff_run = False
 					continue
 				
-				elif spaced_cmd[0] == "set":
+				elif spaced_cmd[0] == "set" and len(spaced_cmd) >= 2:
+					
+					# Check if user is setting the filter
+					
+					if spaced_cmd[1] == "filter":
+						
+						final_filter = ""
+							
+						for inp_op in spaced_cmd[2:]:
+							final_filter += " " + inp_op
+						
+						# The slicing here removes the extra space in the start of the final inputted filter
+						packet_sniff_filter = final_filter[1:]
+						
+						print("Setting filter to {}".format(final_filter[1:]))
+						
+						continue
+
 					# Check if the user didn't specify enough parameters
 					if not len(spaced_cmd) == 3:
 						
 						print("Too many or too few parameters")
+						
+						continue
+					
+					# Change scanning interface
+					if spaced_cmd[1] == "interface":
+						
+						packet_sniff_interface = spaced_cmd[2]
+						
+						print("Setting interface to: {}".format(spaced_cmd[2]))
 						
 						continue
 					
@@ -178,7 +221,7 @@ def handleMenu():
 				
 				# Something wrong with specified command
 				else:
-					print("Unknown Command '{}'".format(inp_cmd))
+					print("Unknown Command '{}', type 'op' for different options and settings.".format(inp_cmd))
 		else:
 			print("Unknown command")
 		
