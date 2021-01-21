@@ -91,6 +91,11 @@ def printPacketSniffOptions():
 run_program = True
 
 def handleMenu():
+	# Make certain variables global for editing
+	global packet_sniff_filename
+	global packet_sniff_count
+	global packet_sniff_filter
+	global packet_sniff_interface
 	# Print logo of project
 	printHeader()
 	
