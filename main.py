@@ -11,6 +11,8 @@ packet_counts = Counter()
 
 captured_packets = []
 
+
+
 ## Function that handles packets that might be clear text
 def handle_cleartext(pkt):
     global captured_packets
@@ -85,116 +87,6 @@ def printPacketSniffOptions():
 	print("r) Run")
 	print("b) Back")
 
-def handle_sniff_menu():
-	global packet_sniff_filename
-	global packet_sniff_count
-	global packet_sniff_filter
-	global packet_sniff_interface
-
-	# Get user input
-	inp_cmd = raw_input(": ")
-
-	# Split the user input
-	spaced_cmd = inp_cmd.split(" ")
-
-	# List options
-	if inp_cmd == "op":
-		# Clear menu
-		os.system('cls' if os.name == 'nt' else 'clear')
-		printPacketSniffOptions()
-		continue
-		
-	if inp_cmd == "r":
-		if packet_sniff_filter == "default":
-			try:
-				if packet_sniff_count == 0:
-					pkts = sniff(filter="not arp and not icmp", iface=packet_sniff_interface)
-					wrpcap(packet_sniff_filename+'.cap', pkts)
-				else:
-					pkts = sniff(filter="not arp and not icmp", count=packet_sniff_count, iface=packet_sniff_interface)
-					wrpcap(packet_sniff_filename+'.cap', pkts)
-			except:
-				print("Hmm... Something went wrong. Make sure none of the settings are invalid, such as the interface or filter")
-		else:
-			if packet_sniff_count == 0:
-				pkts = sniff(filter=packet_sniff_filter, iface=packet_sniff_interface)
-				wrpcap(packet_sniff_filename+'.cap', pkts)
-			else:
-				pkts = sniff(filter=packet_sniff_filter, count=packet_sniff_count, iface=packet_sniff_interface)
-				wrpcap(packet_sniff_filename+'.cap', pkts)
-
-	# Exit this tool
-	elif inp_cmd == "b":
-		menu_sniff_run = False
-		continue
-
-	elif spaced_cmd[0] == "set" and len(spaced_cmd) >= 2:
-		
-		# Check if user is setting the filter
-		
-		if spaced_cmd[1] == "filter":
-			
-			final_filter = ""
-				
-			for inp_op in spaced_cmd[2:]:
-				final_filter += " " + inp_op
-			
-			# The slicing here removes the extra space in the start of the final inputted filter
-			packet_sniff_filter = final_filter[1:]
-			
-			print("Setting filter to {}".format(final_filter[1:]))
-			
-			continue
-
-		# Check if the user didn't specify enough parameters
-		if not len(spaced_cmd) == 3:
-			
-			print("Too many or too few parameters")
-			
-			continue
-		
-		# Change scanning interface
-		if spaced_cmd[1] == "interface":
-			
-			packet_sniff_interface = spaced_cmd[2]
-			
-			print("Setting interface to: {}".format(spaced_cmd[2]))
-			
-			continue
-		
-		# Changing file_name parameter
-		if spaced_cmd[1] == "file_name":
-			
-			packet_sniff_filename = spaced_cmd[2]
-			
-			print("Setting file_name to: {}".format(spaced_cmd[2]))
-			
-			continue
-		
-		# Changing packet_cap parameter
-		elif spaced_cmd[1] == "packet_cap":
-			# Check if user didn't input numbers
-			if (spaced_cmd[2].lower()).islower() == True:
-				
-				print("Please input real numbers")
-				
-				continue
-			packet_sniff_count = int(spaced_cmd[2])
-			
-			# Be sure that we're working with only positive numbers
-			if packet_sniff_count < 0:
-				packet_sniff_count = -packet_sniff_count
-			
-			print("Setting packet_cap to: {}".format(int(spaced_cmd[2])))
-			
-
-	# Execute tool with parameters
-	elif inp_cmd == "r":
-		pass
-
-	# Something wrong with specified command
-	else:
-		print("Unknown Command '{}', type 'op' for different options and settings.".format(inp_cmd))
 
 run_program = True
 
@@ -224,7 +116,111 @@ def handleMenu():
 			
 			# Keep user in sniffer menu until specified
 			while menu_sniff_run:				
-				handle_sniff_menu()
+				# Get user input
+				inp_cmd = raw_input(": ")
+
+				# Split the user input
+				spaced_cmd = inp_cmd.split(" ")
+
+				# List options
+				if inp_cmd == "op":
+					# Clear menu
+					os.system('cls' if os.name == 'nt' else 'clear')
+					printPacketSniffOptions()
+					continue
+					
+				if inp_cmd == "r":
+					if packet_sniff_filter == "default":
+						try:
+							if packet_sniff_count == 0:
+								pkts = sniff(filter="not arp and not icmp", iface=packet_sniff_interface)
+								wrpcap(packet_sniff_filename+'.cap', pkts)
+							else:
+								pkts = sniff(filter="not arp and not icmp", count=packet_sniff_count, iface=packet_sniff_interface)
+								wrpcap(packet_sniff_filename+'.cap', pkts)
+						except:
+							print("Hmm... Something went wrong. Make sure none of the settings are invalid, such as the interface or filter")
+					else:
+						if packet_sniff_count == 0:
+							pkts = sniff(filter=packet_sniff_filter, iface=packet_sniff_interface)
+							wrpcap(packet_sniff_filename+'.cap', pkts)
+						else:
+							pkts = sniff(filter=packet_sniff_filter, count=packet_sniff_count, iface=packet_sniff_interface)
+							wrpcap(packet_sniff_filename+'.cap', pkts)
+
+				# Exit this tool
+				elif inp_cmd == "b":
+					menu_sniff_run = False
+					continue
+
+				elif spaced_cmd[0] == "set" and len(spaced_cmd) >= 2:
+					
+					# Check if user is setting the filter
+					
+					if spaced_cmd[1] == "filter":
+						
+						final_filter = ""
+							
+						for inp_op in spaced_cmd[2:]:
+							final_filter += " " + inp_op
+						
+						# The slicing here removes the extra space in the start of the final inputted filter
+						packet_sniff_filter = final_filter[1:]
+						
+						print("Setting filter to {}".format(final_filter[1:]))
+						
+						continue
+
+					# Check if the user didn't specify enough parameters
+					if not len(spaced_cmd) == 3:
+						
+						print("Too many or too few parameters")
+						
+						continue
+					
+					# Change scanning interface
+					if spaced_cmd[1] == "interface":
+						
+						packet_sniff_interface = spaced_cmd[2]
+						
+						print("Setting interface to: {}".format(spaced_cmd[2]))
+						
+						continue
+					
+					# Changing file_name parameter
+					if spaced_cmd[1] == "file_name":
+						
+						packet_sniff_filename = spaced_cmd[2]
+						
+						print("Setting file_name to: {}".format(spaced_cmd[2]))
+						
+						continue
+					
+					# Changing packet_cap parameter
+					elif spaced_cmd[1] == "packet_cap":
+						# Check if user didn't input numbers
+						if (spaced_cmd[2].lower()).islower() == True:
+							
+							print("Please input real numbers")
+							
+							continue
+						packet_sniff_count = int(spaced_cmd[2])
+						
+						# Be sure that we're working with only positive numbers
+						if packet_sniff_count < 0:
+							packet_sniff_count = -packet_sniff_count
+						
+						print("Setting packet_cap to: {}".format(int(spaced_cmd[2])))
+						
+
+				# Execute tool with parameters
+				elif inp_cmd == "r":
+					pass
+
+				# Something wrong with specified command
+				else:
+					print("Unknown Command '{}', type 'op' for different options and settings.".format(inp_cmd))
+
 		else:
 			print("Unknown command")
 		
