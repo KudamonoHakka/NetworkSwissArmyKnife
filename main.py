@@ -1,7 +1,9 @@
 import sys
 import os
 from scapy.all import *
+# import custom made files
 from sniff import *
+from arp_spoof import *
 
 def printHeader():
 	## The logo of the application.
@@ -28,6 +30,7 @@ arp_spoof_forward_packets = "yes"
 
 run_program = True
 sniff_module = Sniffer()
+arp_module = ARP_Spoofer()
 def handleMenu():
 	# Print logo of project
 	printHeader()
@@ -54,7 +57,10 @@ def handleMenu():
                             pass
 		# Arpspoof Menu
 		elif str(inp_cmd) == "2":
-			pass
+			arp_module.printOptions()
+
+                        while arp_module.handle_menu():
+                            pass
 		else:
 			print("Unknown command")
 		
