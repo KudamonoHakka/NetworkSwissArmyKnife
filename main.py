@@ -19,6 +19,7 @@ def printOptions():
 	# Options menu for the main menu
 	print("1) Packet Sniffer")
 	print("2) ARP Spoof")
+        print("3) DNS Spoof")
 	print("q: Quit")
 
 # Parameters for arp spoofing
