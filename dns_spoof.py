@@ -55,5 +55,53 @@ class DNS_Spoofer:
         print("add [DOMAIN-NAME]) Add a domain to spoof")
         print("remove [DOMAIN-NAME]) Remove a domain to spoof")
         print("r) Run this module")
+        print("op) Print this menu")
         print("set [option] [value]) Set a parameter for this module")
         print("b) Exit this module")
+    
+    def set_property(self, prop_name, prop_val):
+        if prop_name in self.options:
+            self.options[prop_name] = prop_val
+        else:
+            print("Option not found")
+
+    def handle_menu(self):
+        cmd = raw_input(": ")
+        spaced_cmd = cmd.split(" ")
+        if spaced_cmd[0] = "b":
+            return 0
+        elif spaced_cmd[0] == "op":
+            os.system('cls' if os.name == 'nt' else 'clear')
+            self.printOptions()
+        elif spaced_cmd[0] == "r":
+            try:
+                self.start_dns()
+            except:
+                print("Something went wrong. Make sure your options are configured correctly and this program is being ran as a super user")
+        elif spaced_cmd[0] == "set":
+            if len(spaced_cmd) >= 2:
+                new_item_val = ""
+                for inp_op in spaced_cmd[2:]:
+                    new_item_val = inp_op + " "
+                self.set_property(spaced_cmd[1], new_item_val.strip())
+            else:
+                print("Not enough arguments")
+        elif spaced_cmd[0] == "add":
+            if len(spaced_cmd) >= 2:
+                if spaced_cmd[1] not in self.domains:
+                    self.domains.append(spaced_cmd[1])
+                else:
+                    print("Domain already in domain list")
+            else:
+                print("Not enough arguments")
+        elif spaced_cmd[0] == "remove":
+            if len(spaced_cmd) >= 2:
+                if spaced_cmd[1] in self.domains:
+                    self.domains.remove(spaced_cmd[1])
+                else:
+                    print("Couldn't find this domain in the list")
+            else:
+                print("Not enough arguments")
+        else:
+            print("Command not found")
+        return 1

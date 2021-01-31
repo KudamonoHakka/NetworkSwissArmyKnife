@@ -86,10 +86,10 @@ class ARP_Spoofer:
             os.system('cls' if os.name == 'nt' else 'clear')
             self.printOptions()
         elif spaced_cmd[0] == "r":
-            #try:
-            self.start_spoofing()
-            #except:
-                #print("Something is wrong... Make sure your options are configured correctly and this program is being ran as a super user")
+            try:
+                self.start_spoofing()
+            except:
+                print("Something is wrong... Make sure your options are configured correctly and this program is being ran as a super user")
         elif spaced_cmd[0] == "set":
             if len(spaced_cmd) >= 2:
                 new_item_val = ""
