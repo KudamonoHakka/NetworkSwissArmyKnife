@@ -4,6 +4,7 @@ from scapy.all import *
 # import custom made files
 from sniff import *
 from arp_spoof import *
+from dns_spoof import *
 
 def printHeader():
 	## The logo of the application.
@@ -22,16 +23,11 @@ def printOptions():
         print("3) DNS Spoof")
 	print("q: Quit")
 
-# Parameters for arp spoofing
-arp_spoof_host = ""
-arp_spoof_gateway = ""
-arp_spoof_packet_delay = 3000
-arp_spoof_forward_packets = "yes"
-
 
 run_program = True
 sniff_module = Sniffer()
 arp_module = ARP_Spoofer()
+dns_module = DNS_Spoofer()
 def handleMenu():
 	# Print logo of project
 	printHeader()
@@ -58,10 +54,14 @@ def handleMenu():
                             pass
 		# Arpspoof Menu
 		elif str(inp_cmd) == "2":
-			arp_module.printOptions()
+                    arp_module.printOptions()
 
-                        while arp_module.handle_menu():
-                            pass
+                    while arp_module.handle_menu():
+                        pass
+                elif str(inp_cmd) == "3":
+                    dns_module.printOptions()
+                    while dns_module.handle_menu():
+                        pass
 		else:
 			print("Unknown command")
 		

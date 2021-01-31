@@ -5,7 +5,7 @@ import os
 
 
 class DNS_Spoofer:
-    __init__(self):
+    def __init__(self):
         self.options = {"listening_ip": "INSERT_PRIVATE_IP"}
         self.domains = ["www.example.com"]
     def process_packet(self, packet):
@@ -68,7 +68,7 @@ class DNS_Spoofer:
     def handle_menu(self):
         cmd = raw_input(": ")
         spaced_cmd = cmd.split(" ")
-        if spaced_cmd[0] = "b":
+        if spaced_cmd[0] == "b":
             return 0
         elif spaced_cmd[0] == "op":
             os.system('cls' if os.name == 'nt' else 'clear')
