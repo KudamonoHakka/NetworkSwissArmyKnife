@@ -39,19 +39,19 @@ class Sniffer:
         print("packet_cap (0 for infinite): {}".format(self.options["packet_count"]))
         print("filter: {}".format(self.options["packet_filter"]))
         print("interface: {}".format(self.options["interface"]))
-	print("")
-	print("___Commands___")
-	print("set [variable] [value]) Change parameter value")
-	print("op) Options (this menu)")
-	print("r) Run")
-	print("b) Back")
+        print("")
+        print("___Commands___")
+        print("set [variable] [value]) Change parameter value")
+        print("op) Options (this menu)")
+        print("r) Run")
+        print("b) Back")
 
 
     def handle_sniff_menu(self):
 	# This function will handle the different user input
-        cmd = raw_input(": ")
+        cmd = input(": ")
         spaced_cmd = cmd.split(" ")
-        
+
         # List options
         if spaced_cmd[0] == "op":
             # Clear menu

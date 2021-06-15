@@ -1,7 +1,9 @@
 import sys
 from scapy.all import *
-from netfilterqueue import NetfilterQueue
 import os
+if not os.name == 'nt':
+    from netfilterqueue import NetfilterQueue
+
 
 
 class DNS_Spoofer:
@@ -58,7 +60,7 @@ class DNS_Spoofer:
         print("op) Print this menu")
         print("set [option] [value]) Set a parameter for this module")
         print("b) Exit this module")
-    
+
     def set_property(self, prop_name, prop_val):
         if prop_name in self.options:
             self.options[prop_name] = prop_val
@@ -66,7 +68,7 @@ class DNS_Spoofer:
             print("Option not found")
 
     def handle_menu(self):
-        cmd = raw_input(": ")
+        cmd = input(": ")
         spaced_cmd = cmd.split(" ")
         if spaced_cmd[0] == "b":
             return 0

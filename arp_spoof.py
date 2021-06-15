@@ -7,10 +7,6 @@ class ARP_Spoofer:
     def __init__(self):
         self.options = {"target_ip":"", "server_ip":"192.168.1.1", "forward_packets":"yes", "verbose":"yes"}
         self.macs = []
-        if os.name == "nt":
-            from services import WService
-            self.service = WService("RemoteAccess")
-
     def get_mac(self, ip):
         ans, _ = srp(Ether(dst='ff:ff:ff:ff:ff:ff')/ARP(pdst=ip), timeout=3, verbose=0)
         if ans:
@@ -35,13 +31,13 @@ class ARP_Spoofer:
         if self.options["forward_packets"] == "yes":
             # We need to enable port forwarding
             if os.name == "nt":
-                self.service.start()
+                os.system("powershell.exe 'Set-NetIPInterface -Forwarding Enabled'")
             else:
                 with open("/proc/sys/net/ipv4/ip_forward", 'w') as f:
                     f.write('1')
         else:
             if os.name == "nt":
-                self.service.stop()
+                os.system("powershell.exe 'Set-NetIPInterface -Forwarding Disabled'")
             else:
                 with open("/proc/sys/net/ipv4/ip_forward", 'w') as f:
                     f.write('0')
@@ -62,7 +58,7 @@ class ARP_Spoofer:
             self.options[prop_name] = prop_val
         else:
             print("Option not found")
-    
+
     def printOptions(self):
         print("!+!+! ARP-Spoofer !+!+!")
         print("---Parameters---")
@@ -78,7 +74,7 @@ class ARP_Spoofer:
         print("set [property] [value]) set parameter with value")
 
     def handle_menu(self):
-        cmd = raw_input(": ")
+        cmd = input(": ")
         spaced_cmd = cmd.split(" ")
         if spaced_cmd[0] == "b":
             return 0
@@ -101,4 +97,3 @@ class ARP_Spoofer:
         else:
             print("Option not found")
         return 1
-
