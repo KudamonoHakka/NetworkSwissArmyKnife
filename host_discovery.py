@@ -1,8 +1,7 @@
 import sys
 import os
-import subprocess
 from scapy.all import *
-import _thread
+
 
 class Ping_Sweeper:
     def __init__(self):
@@ -12,21 +11,12 @@ class Ping_Sweeper:
             self.options[item_prop] = item_val
         else:
             print("Not a valid option")
-    def ping_thread (self, i):
-        scan_range = self.options["ip_net"] + ".{}".format(i)
-        scan_range = scan_range.strip()
-        res = subprocess.check_output(["ping", "-c", "1", scan_range])
-        if res:
-            print(scan_range)
 
     def ping_sweep(self):
         print("Starting scan...")
         ans, unans = srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst=self.options["ip_net"].strip()), timeout=2)
         for snd, rcv in ans:
             print(rcv.sprintf(r"%ARP.psrc%"))
-        #for i in range(0, 256):
-            #self.ping_thread(i)
-            #_thread.start_new_thread(self.ping_thread, (i, ))
 
     def printOptions(self):
         print("")
