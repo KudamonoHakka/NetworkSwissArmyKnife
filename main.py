@@ -9,6 +9,7 @@ from arp_spoof import *
 if not os.name == 'nt':
 	from dns_spoof import *
 from port_scan import *
+from host_discovery import *
 
 def printHeader():
 	## The logo of the application.
@@ -26,6 +27,7 @@ def printOptions():
 	print("2) ARP Spoof")
 	print("3) DNS Spoof (Linux only)")
 	print("4) Port Scan")
+	print("5) Host Discovery")
 	print("q: Quit")
 
 
@@ -36,6 +38,7 @@ dns_module = ""
 if not os.name == 'nt':
 	dns_module = DNS_Spoofer()
 p_scan_module = Port_Scanner()
+h_scan_modle = Ping_Sweeper()
 def handleMenu():
 	# Print logo of project
 	printHeader()
@@ -71,6 +74,10 @@ def handleMenu():
 		elif str(inp_cmd) == "4":
 			p_scan_module.printOptions()
 			while p_scan_module.handle_menu():
+				pass
+		elif str(inp_cmd) == "5":
+			h_scan_modle.printOptions()
+			while h_scan_modle.handle_menu():
 				pass
 		else:
 			print("Unknown command")
