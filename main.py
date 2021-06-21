@@ -22,7 +22,7 @@ def printHeader():
 	print("The general purpose network hacking tool")
 
 def printOptions():
-	# Options menu for the main menuu
+	# Options menu for the main menu
 	print("1) Packet Sniffer")
 	print("2) ARP Spoof")
 	print("3) DNS Spoof (Linux only)")
