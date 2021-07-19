@@ -36,7 +36,7 @@ class Sniffer:
         print("")
         print("___Parameters___")
         print("file_name: {}".format(self.options["file_name"]))
-        print("packet_cap (0 for infinite): {}".format(self.options["packet_count"]))
+        print("packet_count (0 for infinite): {}".format(self.options["packet_count"]))
         print("filter: {}".format(self.options["packet_filter"]))
         print("interface: {}".format(self.options["interface"]))
         print("")
