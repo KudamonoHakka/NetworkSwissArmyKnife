@@ -5,6 +5,7 @@ import socket
 from scapy.all import *
 # import custom made files
 from sniff import *
+from sniff_count import *
 from arp_spoof import *
 if not os.name == 'nt':
 	from dns_spoof import *
@@ -28,11 +29,13 @@ def printOptions():
 	print("3) DNS Spoof (Linux only)")
 	print("4) Port Scan")
 	print("5) Host Discovery")
+	print("6) Data monitoring")
 	print("q: Quit")
 
 
 run_program = True
 sniff_module = Sniffer()
+sniff_c_module = Sniffer_Count()
 arp_module = ARP_Spoofer()
 dns_module = ""
 if not os.name == 'nt':
@@ -78,6 +81,10 @@ def handleMenu():
 		elif str(inp_cmd) == "5":
 			h_scan_modle.printOptions()
 			while h_scan_modle.handle_menu():
+				pass
+		elif str(inp_cmd) == "6":
+			sniff_c_module.printOptions()
+			while sniff_c_module.handle_sniff_menu():
 				pass
 		else:
 			print("Unknown command")

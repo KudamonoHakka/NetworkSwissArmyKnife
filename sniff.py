@@ -4,7 +4,7 @@ from scapy.all import *
 
 class Sniffer:
     def __init__(self):
-        self.options = {"file_name":"foo", "packet_count":0, "packet_filter":"default", "interface":"eth0"}
+        self.options = {"file_path": "", "file_name":"foo", "packet_count":0, "packet_filter":"default"}
     def set_property(self, item_prop, item_val):
         if item_prop in self.options:
             self.options[item_prop] = item_val
@@ -15,32 +15,36 @@ class Sniffer:
         if self.options["packet_filter"] == "default":
             try:
                 if int(self.options["packet_count"]) == 0:
-                    pkts = sniff(filter="not arp and not icmp", iface=self.options["interface"])
+                    #pkts = sniff(filter="not arp and not icmp", iface=self.options["interface"])
+                    pkts = sniff(filter="not arp and not icmp")
                 else:
-                    pkts = sniff(filter="not arp and not icmp", count=int(self.options["packet_count"]), iface=self.options["interface"])
-
+                    #pkts = sniff(filter="not arp and not icmp", count=int(self.options["packet_count"]), iface=self.options["interface"])
+                    pkts = sniff(filter="not arp and not icmp", count=int(self.options["packet_count"]))
             except:
-                print("Hmm... Something went wrong. Make sure this program is running as sudo and none of the settings are invalid.")
+                print("Hmm... Something went wrong. Make sure this program is running as sudo and none of the settings are invalid. If you're using windows, make sure you have npcap installed")
         else:
             try:
                 if int(self.options["packet_count"]) == 0:
-                    pkts = sniff(filter=self.options["packet_filter"], iface=self.options["interface"])
+                    pkts = sniff(filter=self.options["packet_filter"])
                 else:
-                    pkts = sniff(filter=self.options["packet_filter"], count=int(self.options["packet_count"]), iface=self.options["interface"])
+                    pkts = sniff(filter=self.options["packet_filter"], count=int(self.options["packet_count"]))
 
             except:
                 print("Hmm... Something went wrong. Make sure this program is running as sudo and none of the settings are invalid.")
-        wrpcap(self.options["file_name"]+'.pcap', pkts)
+        path_ = self.options["file_path"]+self.options["file_name"]+'.pcap'
+        path_ = path_[1:]
+        pktdump = PcapWriter(path_, append=False, sync=True)
+        pktdump.write(pkts)
 
     def printOptions(self):
         print("")
         print("+=+=+ Packet Sniffer +=+=+")
         print("")
         print("___Parameters___")
+        print("file_path (PLEASE CHANGE!: Example: C:\\Somewhere\\NotSure\\): {}".format(self.options["file_path"]))
         print("file_name: {}".format(self.options["file_name"]))
         print("packet_count (0 for infinite): {}".format(self.options["packet_count"]))
         print("filter: {}".format(self.options["packet_filter"]))
-        print("interface: {}".format(self.options["interface"]))
         print("")
         print("___Commands___")
         print("set [variable] [value]) Change parameter value")
