@@ -8,6 +8,6 @@ it is as simple as running python on the main.py file. If there are any dependen
 
 # What is there?
 - A sniffing module that saves packets to a .pcap file that can be dissected in common pcap editors such as WireShark. 
--- Also includes support for users to write their own filter to the module. Same as wire shark's filtering langauge
+- - Also includes support for users to write their own filter to the module. Same as wire shark's filtering langauge
 
 
